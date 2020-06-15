@@ -10,8 +10,6 @@ namespace SimpleCardGame
 {
     class Randomizing
     {
-
-
         //kod som skapar ett randomiserat värde.
         public static readonly Random getrandom = new Random();
         public int[] RandomNumberSpelaren(int numberOfDice)
@@ -57,6 +55,48 @@ namespace SimpleCardGame
             return slag;
 
         }
+
+        public int Points(List<int> die)
+        {
+            List<int> totalSum = new List<int>();
+            int sumOfPoints = 0;
+            while (true)
+            {
+                int[] diepoints = die.ToArray();
+                Console.WriteLine("Vilka tärningar vill du kombinera? - Tryck K när du är klar ");
+                string userinputpoints = Console.ReadLine();
+                
+                if (userinputpoints == "k"|| userinputpoints ==  "K")
+                    break;
+
+                int k = 0;
+                int[] keep = new int[userinputpoints.Length];
+                while (k < userinputpoints.Length)
+                {
+                    int keepPick = Convert.ToInt32(userinputpoints.Substring(k, 1));
+                    keep[k] = keepPick;
+                    //Console.WriteLine("--------------------");
+                    //Console.WriteLine(insatsRone[k]);
+                    //Console.WriteLine("--------------------");
+                    k++;
+                }
+
+                int count = 0;
+                int[] points = new int[userinputpoints.Length];
+
+                while (count < keep.Length)
+                {
+                    int y = (int)keep.GetValue(count) - 1;
+                    points[count] = (int)diepoints.GetValue(y);
+                    count++;
+                }
+
+                int pointsSum = points.Sum();
+                totalSum.Add(pointsSum);
+                sumOfPoints = totalSum.AsQueryable().Sum();
+            }
+            return sumOfPoints;
+        }
         public Game()
         {
         }
@@ -84,7 +124,7 @@ namespace SimpleCardGame
                 int[] roundOne = rOne.Round(NrOfDice);
 
                 Console.WriteLine("-----------------------------");
-                Console.WriteLine("Vilka tärningar vill du behålla?");
+                Console.WriteLine("Vilka tärningar vill du behålla? - Tryck enter om du vill behålla alla");
                 Console.WriteLine("-----------------------------");
                 string userinputRone = Console.ReadLine();
                 int k = 0;
@@ -128,7 +168,7 @@ namespace SimpleCardGame
                 int[] roundTwo = rTwo.Round(NrOfDiceTwo);
 
                 Console.WriteLine("-----------------------------");
-                Console.WriteLine("Vilka tärningar vill du behålla?");
+                Console.WriteLine("Vilka tärningar vill du behålla? - Tryck enter om du vill behålla alla");
                 Console.WriteLine("-----------------------------");
                 string userinputRtwo = Console.ReadLine();
                 int m = 0;
@@ -178,7 +218,12 @@ namespace SimpleCardGame
             Console.WriteLine("------------Spelet är över--------------");
             Console.WriteLine("Dina tärningar blev");
             summering.ForEach(Console.WriteLine);
+           
+            Game pointsOne = new Game();
             
+            int pointsRoundOne = pointsOne.Points(summering);
+            Console.WriteLine("Din totalsumma blev:");
+            Console.WriteLine(pointsRoundOne);
             Console.ReadKey();
 
         }
